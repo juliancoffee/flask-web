@@ -1,0 +1,22 @@
+.main-body {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+form.treasure-place-rate {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    padding-top: 5px;
+    padding: 30px;
+}
+form.treasure-place-rate h1,h2 {
+    border-radius: 10px;
+    background-color: #4fa054;
+}
+
+#map-picture {
+    height: 87vh;
+    width: 60vw;
+}

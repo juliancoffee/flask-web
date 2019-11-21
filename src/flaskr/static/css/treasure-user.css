@@ -1,0 +1,9 @@
+.treasure-login {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: 30px;
+    position: fixed;
+    top: 50%;
+    left: 40%;
+}

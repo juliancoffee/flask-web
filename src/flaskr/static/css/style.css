@@ -1,0 +1,21 @@
+body {
+    background-image: url("../img/dog-corgi-select.jpeg");
+}
+
+header {
+    background-color: #e0de5c;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+header a {
+    text-decoration: none;
+    text-align: center;
+    color: #5e574d;
+    padding: 0px 5%;
+    flex: 1;
+}
+header .selected-page {
+    background-color: #ffdfc6;
+}

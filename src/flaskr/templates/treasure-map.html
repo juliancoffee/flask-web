@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            Treasure Gram
+        </title>
+        <!-- icon -->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <!-- my stylesheet -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <!-- map stylesheet -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/treasure-map.css') }}">
+        <!-- my script for activate and communicate with map -->
+        <script type="module" src="{{ url_for('static', filename='js/map.js') }}"></script>
+        <!-- leaflet stylesheet -->
+        <link rel="stylesheet" 
+              href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+              integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+              crossorigin=""/>
+
+        <!-- leaflet map js -->
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+                integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+                crossorigin=""></script>
+        <!-- Esri Leaflet -->
+        <script src="https://unpkg.com/esri-leaflet@2.3.1/dist/esri-leaflet.js"
+                integrity="sha512-Np+ry4Dro5siJ1HZ0hTwn2jsmu/hMNrYw1EIK9EjsEVbDge4AaQhjeTGRg2ispHg7ZgDMVrSDjNrzH/kAO9Law=="
+                crossorigin=""></script>
+        <!-- Esri Leaflet Geocoder -->
+        <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css">
+        <script src="https://unpkg.com/esri-leaflet-geocoder"></script>
+        <!-- React -->
+        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+        <!-- Yet another React plugin -->
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    </head>
+    <body>
+        <header>
+            <a href="treasure-user.html">
+                <h1>Личная информация</h1>
+            </a>
+            <a href="index.html">
+                <h1>Лента новостей</h1>
+            </a>
+            <a href="#" class="selected-page">
+                <h1>Карта</h1>
+            </a>
+        </header>
+
+        <div class="main-body">
+            <div id="map-picture">
+            </div>
+
+            <form class="treasure-place-rate">
+                <h1>
+                    Отзывы
+                </h1>
+                <h2>
+                    Местоположение
+                </h2>
+                <input type="text" name="adress">
+                <h2>
+                    Комментарий
+                </h2>
+                <textarea rows="5" cols="60" name="comment">
+                </textarea>
+                <h2>
+                    Оценка места по пятибальной шкале
+                </h2>
+                <select name="rating">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </form>
+        </div>
+    </body>
+</html>
