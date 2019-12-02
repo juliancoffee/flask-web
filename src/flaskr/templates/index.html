@@ -8,6 +8,7 @@
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/treasure-news.css') }}">
+        <script type="module" src="{{ url_for('static', filename='js/news.js') }}"></script>
     </head>
     <body>
         <header>
@@ -21,31 +22,57 @@
                 <h1>Карта</h1>
             </a>
         </header>
-        <div class="treasure-news">
+        <div id="treasure-post">
+            <form>
+                <h3>
+                    Post your feelings
+                </h3>
+                <h4>Theme</h4>
+                <input id="treasure-post-theme" type="text" name="adress">
+
+                <h4>Message</h4>
+                <textarea id="treasure-post-placeholder"
+                    rows="5"
+                    cols="60"
+                    value=""
+                    name="new-post">
+                </textarea>
+
+                <button id="treasure-post-button" type=button>
+                    New post
+                </button>
+            </form>
+        </div>
+
+        <div id="treasure-news-placeholder">
             <div>
                 <h2>
                     First News
                 </h2>
-                <table>
-                    <tr>
-                        <td>kek</td>
-                        <td>lol</td>
-                    </tr>
-                    <tr>
-                        <td>kik</td>
-                        <td>lil</td>
-                    </tr>
-                </table>
+                <div class="treasure-post-content">
+                    <table>
+                        <tr>
+                            <td>kek</td>
+                            <td>lol</td>
+                        </tr>
+                        <tr>
+                            <td>kik</td>
+                            <td>lil</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <div>
                 <h2>
                     Second News
                 </h2>
-                <ul>
-                    <li> kek </li>
-                    <li> lol </li>
-                    <li> lol </li>
-                </ul>
+                <div class="treasure-post-content">
+                    <ul>
+                        <li> kek </li>
+                        <li> lol </li>
+                        <li> lol </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </body>

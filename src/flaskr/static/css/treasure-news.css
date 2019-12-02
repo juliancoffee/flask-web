@@ -1,12 +1,25 @@
-.treasure-news {
+#treasure-news-placeholder {
     display: flex;
     border: 50px;
     flex-direction: column;
 }
-.treasure-news div {
-    margin: 100px;
+#treasure-news-placeholder>div {
+    margin: 10px;
+}
+
+#treasure-news-placeholder>div>h2 {
+    display: inline;
+    margin: 5px;
+    background-color: #ffc3ff;
+}
+
+#treasure-news-placeholder>div>div {
+    width: 80%;
+    padding: 10px;
+    border: 5px;
     background-color: #ffffff;
 }
+
 .treasure-news table {
     border: 1px solid #333;
 }

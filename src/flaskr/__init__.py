@@ -23,6 +23,7 @@ def create_app(test_config=None):
         pass
 
     @app.route('/index.html')
+    @app.route('/')
     def index():
         return render_template('index.html')
 
