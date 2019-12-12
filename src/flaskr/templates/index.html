@@ -12,39 +12,50 @@
     </head>
     <body>
         <header>
-            <a href="treasure-user.html">
+            <a href="/treasure-user.html">
                 <h1>Личная информация</h1>
             </a>
             <a href="#" class="selected-page">
                 <h1>Лента новостей</h1>
             </a>
-            <a href="treasure-map.html">
+            <a href="/treasure-map.html">
                 <h1>Карта</h1>
             </a>
         </header>
         <div id="treasure-post">
-            <form>
-                <h3>
-                    Post your feelings
-                </h3>
-                <h4>Theme</h4>
-                <input id="treasure-post-theme" type="text" name="adress">
+            <h3>
+                Post your feelings
+            </h3>
+            <div class="form">
+                <h2>Topic</h2>
+                <input class="treasure-input" id="treasure-post-topic" type="text" name="adress">
 
-                <h4>Message</h4>
-                <textarea id="treasure-post-placeholder"
+                <h2>Message</h2>
+                <textarea class="treasure-input" id="treasure-post-placeholder"
                     rows="5"
                     cols="60"
-                    value=""
-                    name="new-post">
-                </textarea>
+                    name="new-post"></textarea>
 
-                <button id="treasure-post-button" type=button>
+                <button class="treasure-input" id="treasure-post-button" type=button>
                     New post
                 </button>
-            </form>
+            </div>
         </div>
 
         <div id="treasure-news-placeholder">
+            <h3>
+                News
+            </h3>
+            {% for post in posts %}
+            <div>
+                <h2>
+                    {{ post.user +" : "+ post.topic }}
+                </h2>
+                <div class="treasure-post-content">
+                    {{ post.content }}
+                </div>
+            </div>
+            {% endfor %}
             <div>
                 <h2>
                     First News

@@ -15,16 +15,26 @@
             <a href="#" class="selected-page">
                 <h1>Личная информация</h1>
             </a>
-            <a href="index.html">
+            <a href="/index.html">
                 <h1>Лента новостей</h1>
             </a>
-            <a href="treasure-map.html">
+            <a href="/treasure-map.html">
                 <h1>Карта</h1>
             </a>
         </header>
-        <form class="treasure-login">
-            <input type="login" name="login">
-            <input type="password" name="password">
-        </form>
+        {% if logged == "Yes" %}
+            <h1>
+                You are logged
+            </h1>
+        {% else %}
+            <div id="treasure-enter">
+                <a href="treasure-login/login">
+                    <h1> Log In </h1>
+                </a>
+                <a href="treasure-login/register">
+                    <h1> New account </h1>
+                </a>
+            </div>
+        {% endif %}
     </body>
 </html>

@@ -23,3 +23,28 @@
 .treasure-news table {
     border: 1px solid #333;
 }
+
+#treasure-post {
+    display: flex;
+    border: 50px;
+    flex-direction: column;
+}
+
+#treasure-post>div {
+    margin: 10px;
+    border: 5px;
+}
+
+#treasure-post>div>h2 {
+    display: inline;
+    margin: 5px;
+    background-color: #ffc3ff;
+}
+
+#treasure-post>div>.treasure-input {
+    display: flex;
+}
+
+#treasure-post>h3,#treasure-news-placeholder>h3 {
+    background-color: #e0de5c;
+}

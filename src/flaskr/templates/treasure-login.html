@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            Treasure Gram
+        </title>
+        <!-- icon -->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/treasure-user.css') }}">
+        <script type="module" src="{{ url_for('static', filename='js/login.js') }}"></script>
+    </head>
+    <body>
+        <header>
+            <a href="#" class="selected-page">
+                <h1>Личная информация</h1>
+            </a>
+            <a href="index.html">
+                <h1>Лента новостей</h1>
+            </a>
+            <a href="treasure-map.html">
+                <h1>Карта</h1>
+            </a>
+        </header>
+        {% if registered == "Yes" %}
+        <div id="flag-login" flag="yes"></div>
+        <div id="treasure-enter-form">
+        {% else %}
+        <div id="flag-login" flag="no"></div>
+        <div id="treasure-enter-form">
+        <h4>Dog name</h4>
+        <input id="treasure-enter-dogname" type="login" name="dog">
+        <h4>Name</h4>
+        <input id="treasure-enter-name" type="login" name="name">
+        {% endif %}
+            <h4>Username</h4>
+            <input id="treasure-enter-username" type="login" name="username">
+            <h4>Password</h4>
+            <input id="treasure-enter-password" type="password" name="password">
+            <button id="treasure-enter-button" type=button>
+        {% if registered == "Yes" %}
+                Login
+        {% else %}
+                Register
+        {% endif %}
+            </button>
+        </div>
+    </body>
+</html>
