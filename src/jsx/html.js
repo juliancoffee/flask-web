@@ -14,9 +14,9 @@ const deleteDiv = (element) => {
 
 const getCookie = (name) => {
     let cookies = document.cookie.split(";").
-        map((el) => el.
-            split("=").
-            map((el) => el.trim()))
+        map((el) => el
+            .split("=")
+            .map((el) => el.trim()));
     let result = ""
     for (let c of cookies) {
         if (c[0] === name) {
