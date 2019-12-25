@@ -1,64 +1,82 @@
 import {requestPost, onResponse} from "./request.js"
-import {deleteDiv} from "./html.js"
 
-const onClickLogin = () => {
-    let form = document.getElementById("treasure-enter-form")
-    let username = document.getElementById("treasure-enter-username").value
-    let password = document.getElementById("treasure-enter-password").value
-    makeLogin(username, password)
-}
 
-const makeLogin = (username, password) => {
-    let form = document.getElementById("treasure-enter-form")
+const makeRegister = (login, password, dogname, username) => {
     let msg = {
-        username: username,
-        password: password,
-    }
-    requestPost('/login', JSON.stringify(msg), response => {
-        onResponse(response, (answer) => {
-            console.log(answer)
-            deleteDiv(form)
-        })
-    })
-}
-
-const makeRegister = (username, password, dogname, name) => {
-    let msg = {
-        username: username,
+        login: login,
         password: password,
         dogname: dogname,
-        name: name,
-        count: 0,
+        username: username,
     }
     requestPost('/register', JSON.stringify(msg), response => {
         onResponse(response, (answer) => {
             if (answer === "Ok") {
-                console.log("yes, we did it")
-                makeLogin(username, password)
+                console.log("Registered")
+                makeLogin(login, password)
+            } else if (answer === "Exists") {
+                alert("User with this login already exists")
             } else {
-                console.log("Error: " + answer)
+                console.log("Unexpected problem")
             }
         })
     })
 }
 
+const makeLogin = (login, password) => {
+    let form = document.getElementById("treasure-enter-form")
+    let msg = {
+        login: login,
+        password: password,
+    }
+    requestPost('/login', JSON.stringify(msg), response => {
+        onResponse(response, (answer) => {
+            if (answer === "Ok") {
+                ReactDOM.render(
+                    <YouLogged />,
+                    form
+                )
+            } else if ((answer === "User not found") || (answer === "Wrong password")) {
+                alert("Wrong login or password")
+            } else {
+                console.log("Unexpected error")
+            }
+        })
+    })
+}
+
+const YouLogged = () => {
+    return (
+        <div className="tresure-logged-message">
+            <h3> You are logged </h3>
+            <a href="/treasure-user.html">
+                <h3> Go to info </h3>
+            </a>
+        </div>
+    )
+}
+
 const onClickRegister = () => {
-    let username = document.getElementById("treasure-enter-username").value
+    let login = document.getElementById("treasure-enter-login").value
     let password = document.getElementById("treasure-enter-password").value
     let dogname = document.getElementById("treasure-enter-dogname").value
-    let name = document.getElementById("treasure-enter-name").value
-    makeRegister(username, password, dogname, name)
+    let username = document.getElementById("treasure-enter-username").value
+    makeRegister(login, password, dogname, username)
+}
+
+const onClickLogin = () => {
+    let form = document.getElementById("treasure-enter-form")
+    let login = document.getElementById("treasure-enter-login").value
+    let password = document.getElementById("treasure-enter-password").value
+    makeLogin(login, password)
 }
 
 const login = () => {
-    let flag = document.getElementById("flag-login").
+    let flag_login = document.getElementById("flag-login").
         getAttribute("flag")
     let button = document.getElementById("treasure-enter-button")
-    if (flag === "yes") {
-        console.log("cool")
+    if (flag_login === "yes") {
         button.addEventListener("click", onClickLogin)
     } else {
-        console.log("щас порешаем вопросики")
         button.addEventListener("click", onClickRegister)
     }
 }

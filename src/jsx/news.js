@@ -1,13 +1,11 @@
-import {newPost, getCookie} from "./html.js";
+import {createPost, newPost, getCookie} from "./html.js";
 import {requestPost, onResponse} from "./request.js";
 
 const onClickPost = () => {
     const content = document.getElementById("treasure-post-placeholder").value;
     const topic = document.getElementById("treasure-post-topic").value;
-    let user = getCookie("user")
-    if (user === "") {
-        user = "anon"
-    }
+    let token = getCookie("token")
+
     let error = [];
     if (content === "") {
         error.push("content is empty")
@@ -20,17 +18,12 @@ const onClickPost = () => {
         let msg = {
             content: content,
             topic: topic,
-            user: user,
+            token: token,
         }
         let post = JSON.stringify(msg)
         document.getElementById("treasure-post-placeholder").value = ""
         document.getElementById("treasure-post-topic").value = ""
-        newPost(content, topic, user);
-        requestPost('/', post, (response) => {
-            onResponse(response, (text) => {
-                console.log("Answer: " + text)
-            })
-        });
+        createPost(post);
     } else {
         alert(error)
     }

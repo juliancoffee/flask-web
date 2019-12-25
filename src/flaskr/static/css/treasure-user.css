@@ -13,3 +13,38 @@
 #treasure-enter-form>h4 {
     text-align: center;
 }
+
+#treasure-enter {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 400px;
+    position: fixed;
+    top: 50%;
+    left: 40%;
+    border-radius: 5px;
+    background-color: #ffdfc6;
+}
+
+#treasure-enter>a {
+    text-decoration: underline;
+    text-align: center;
+    color: #5e574d;
+}
+
+#treasure-logged-form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 400px;
+    position: fixed;
+    top: 50%;
+    left: 40%;
+    border-radius: 5px;
+    background-color: #ffdfc6;
+}
+
+#treasure-logged-form>h1>p {
+    color: #5e574d;
+    text-align: center;
+}

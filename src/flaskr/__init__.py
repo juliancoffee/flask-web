@@ -1,6 +1,9 @@
 import os
-import json
 from . import datawork
+from . import security
+from . import sessions
+
+import flask
 
 from flask import (
     Flask, render_template, request, make_response
@@ -28,24 +31,36 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route('/treasure-login/<action>/index.html')
     @app.route('/index.html')
     @app.route('/', methods=['GET', 'POST'])
     def index(action=""):
-        data = datawork.get_data("posts.json")
+        posts = datawork.get_data("posts.json")
         users = datawork.get_data("users.json")
         if request.method == 'POST':
-            record = request.get_json()
-            for user in users:
-                if record["user"] == user["name"]:
-                    record["user"] == int(record["count"]) + 1
-            data.append(record)
-            datawork.update_data("posts.json", data)
+            new_post = request.get_json()
+            session_list = sessions.get_sessions("sessions.json")
 
-            return "Taken, ok"
+            session_token = new_post["token"]
+            if sessions.check_token(session_token, session_list):
+                author = sessions.get_user(session_token, session_list)
+            else:
+                flask.abort(403)
+                flask.abort("Token authentification failed")
+                return
+
+            users[author]["count_post"] += 1
+            datawork.update_data("users.json", users)
+
+            created_post = {
+                "topic": users[author]["username"] + ": " + new_post["topic"],
+                "content": new_post["content"],
+            }
+            posts.append(created_post)
+            datawork.update_data("posts.json", posts)
+            return created_post
         else:
-            data.reverse()
-            return render_template('index.html', posts=data)
+            posts.reverse()
+            return render_template('index.html', posts=posts)
 
     return app
 
@@ -55,16 +70,36 @@ app = create_app()
 
 @app.route('/treasure-user.html')
 def treasure_user():
+    users = datawork.get_data("users.json")
+
     islogged = request.cookies.get('islogged')
-    return render_template('treasure-user.html', logged=islogged)
+    session_token = request.cookies.get('token')
+    session_list = sessions.get_sessions("sessions.json")
+    username = ""
+    session = "no"
+    if sessions.check_token(session_token, session_list):
+        login = sessions.get_user(session_token, session_list)
+        username = users[login]["username"]
+        session = "Ok"
+
+    resp = make_response(render_template(
+        'treasure-user.html',
+        logged=islogged if islogged is not None else "no",
+        username=username,
+        session=session,
+    ))
+    if session != "Ok":
+        resp.set_cookie("islogged", "", expires=0)
+        resp.set_cookie("token", "", expires=0)
+    return resp
 
 
 @app.route('/treasure-login/<action>/')
 def login_handler(action):
     if action == "login":
-        return render_template('treasure-login.html', registered="Yes")
+        return render_template('treasure-login.html', login=True)
     elif action == "register":
-        return render_template('treasure-login.html', registered="no")
+        return render_template('treasure-login.html', login=False)
     else:
         return "Error"
 
@@ -73,66 +108,132 @@ def login_handler(action):
 def register():
     if request.method == 'POST':
         form = request.get_json()
+        user_login = form["login"]
+
+        users = datawork.get_data("users.json")
+        for user in users:
+            if user == user_login:
+                print(f"user = {user}\nlogin = {user_login}")
+                return "Exists"
 
         hash_password = generate_password_hash(form["password"])
         new_record = {
-            "user": form["username"],
-            "hash": hash_password,
-            "dog": form["dogname"],
-            "name": form["name"],
-            "count_post": 0,
+            user_login: {
+                "hash": hash_password,
+                "dogname": form["dogname"],
+                "username": form["username"],
+                "count_post": 0,
+            }
         }
 
-        data = datawork.get_data("users.json")
-        data.append(new_record)
-        datawork.update_data("users.json", data)
+        users.update(new_record)
+        datawork.update_data("users.json", users)
 
-        resp = make_response("Ok")
-        resp.set_cookie("isregistered", "Yes")
-        return resp
+        return "Ok"
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
         users = datawork.get_data("users.json")
+
         form = request.get_json()
-
-        username = form["username"]
+        user_login = form["login"]
         password = form["password"]
-        for user in users:
-            if user["user"] == username:
-                hash_password = user["hash"]
-            logged_user = user
 
-        correct = check_password_hash(hash_password, password)
-        if correct:
-            resp = make_response(logged_user)
-            resp.set_cookie("user", user["user"])
-            resp.set_cookie("islogged", "Yes")
+        logged_user = users.get(user_login)
+        if logged_user is None:
+            print("User not found")
+            return "User not found"
         else:
-            resp = make_response("err")
-        return resp
+            hash_password = logged_user["hash"]
+            if check_password_hash(hash_password, password):
+                resp = make_response("Ok")
+                session_token = security.generate_token()
+                resp.set_cookie("token", session_token)
+
+                session_list = sessions.get_sessions("sessions.json")
+                for _, session in session_list.items():
+                    if session["login"] == user_login:
+                        session["valid"] = False
+
+                new_session = sessions.create_session(
+                    user_login,
+                    session_token
+                )
+                sessions.add_session(session_list, new_session)
+                sessions.save_sessions("sessions.json", session_list)
+
+                resp = make_response("Ok")
+                resp.set_cookie("token", session_token)
+                resp.set_cookie("islogged", "Yes")
+                return resp
+            else:
+                print("Wrong password")
+                return "Wrong password"
 
 
-@app.route('/treasure-login/<action>/treasure-map.html')
-@app.route('/treasure-map.html')
+@app.route('/treasure-map.html', methods=['POST', 'GET'])
 def treasure_map(action=""):
-    return render_template('treasure-map.html')
+    if request.method == 'POST':
+        posts = datawork.get_data("posts.json")
+        users = datawork.get_data("users.json")
+        session_list = sessions.get_sessions("sessions.json")
+
+        new_comment = request.get_json()
+        session_token = new_comment["token"]
+        if sessions.check_token(session_token, session_list):
+            author = sessions.get_user(session_token, session_list)
+            topic = f"{users[author]['username']}: Comment"
+            content = f"Address: {new_comment['address']}\n" +\
+                f"Comment: {new_comment['post']}\n" +\
+                f"Rate: {new_comment['rating']}\n"
+            new_post = {
+                "content": content,
+                "topic": topic,
+            }
+            posts.append(new_post)
+            datawork.update_data("posts.json", posts)
+            return "ok"
+        else:
+            flask.abort(403)
+    else:
+        return render_template('treasure-map.html')
 
 
 @app.route('/api/posts')
 def api():
-    user = request.cookies.get('user')
-    if user == "admin":
-        data = datawork.get_data("posts.json")
-        return json.dumps(data, indent=4)
-    return user + " is not admin"
+    session_list = sessions.get_sessions("sessions.json")
+    session_token = request.cookies.get('token')
+    if sessions.check_token(session_token, session_list):
+        login = sessions.get_user(session_token, session_list)
+        if login == "admin":
+            data = datawork.get_data("posts.json")
+            return {"posts": data}
+        else:
+            return login + " is not admin"
+    else:
+        return "You are not admin or your session expired"
 
 
 @app.route('/api/users')
 def getusers():
-    user = request.cookies.get('user')
-    if user == "admin":
-        data = datawork.get_data("users.json")
-        return json.dumps(data, indent=4)
+    session_list = sessions.get_sessions("sessions.json")
+    session_token = request.cookies.get('token')
+    if sessions.check_token(session_token, session_list):
+        login = sessions.get_user(session_token, session_list)
+        if login == "admin":
+            data = datawork.get_data("users.json")
+            return data
+        else:
+            return login + " is not admin"
+    else:
+        return "You are not admin or your session expired"
+
+
+@app.route('/quit')
+def endsession():
+    resp = make_response(render_template('treasure-quit.html'))
+    resp.set_cookie("islogged", "", expires=0)
+    resp.set_cookie("token", "", expires=0)
+    return resp

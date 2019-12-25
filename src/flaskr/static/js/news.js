@@ -1,14 +1,12 @@
-import { newPost, getCookie } from "./html.js";
+import { createPost, newPost, getCookie } from "./html.js";
 import { requestPost, onResponse } from "./request.js";
 
-const onClickPost = () => {
-    const content = document.getElementById("treasure-post-placeholder").value;
-    const topic = document.getElementById("treasure-post-topic").value;
-    let user = getCookie("user");
-    if (user === "") {
-        user = "anon";
-    }
-    let error = [];
+var onClickPost = function onClickPost() {
+    var content = document.getElementById("treasure-post-placeholder").value;
+    var topic = document.getElementById("treasure-post-topic").value;
+    var token = getCookie("token");
+
+    var error = [];
     if (content === "") {
         error.push("content is empty");
     }
@@ -17,34 +15,29 @@ const onClickPost = () => {
     }
 
     if (error.length === 0) {
-        let msg = {
+        var msg = {
             content: content,
             topic: topic,
-            user: user
+            token: token
         };
-        let post = JSON.stringify(msg);
+        var post = JSON.stringify(msg);
         document.getElementById("treasure-post-placeholder").value = "";
         document.getElementById("treasure-post-topic").value = "";
-        newPost(content, topic, user);
-        requestPost('/', post, response => {
-            onResponse(response, text => {
-                console.log("Answer: " + text);
-            });
-        });
+        createPost(post);
     } else {
         alert(error);
     }
 };
 
-const main = () => {
-    let news = document.getElementById("treasure-news-placeholder");
-    let button = document.getElementById("treasure-post-button");
+var main = function main() {
+    var news = document.getElementById("treasure-news-placeholder");
+    var button = document.getElementById("treasure-post-button");
 
-    let inputTopic = document.getElementById("treasure-post-topic");
+    var inputTopic = document.getElementById("treasure-post-topic");
 
     button.addEventListener("click", onClickPost);
-    inputTopic.addEventListener("input", e => {
-        let msg = e.target.value;
+    inputTopic.addEventListener("input", function (e) {
+        var msg = e.target.value;
         e.target.value = msg.charAt(0).toUpperCase() + msg.substring(1);
     });
 };

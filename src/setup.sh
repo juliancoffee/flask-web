@@ -1,5 +1,5 @@
 cd ..
 activate
-cd src
+cd src || exit
 export FLASK_APP=flaskr
 export FLASK_ENV=development

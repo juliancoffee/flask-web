@@ -12,7 +12,7 @@
         <!-- map stylesheet -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/treasure-map.css') }}">
         <!-- my script for activate and communicate with map -->
-        <script type="module" src="{{ url_for('static', filename='js/map.js') }}"></script>
+        <script type="module" crossorigin="" src="{{ url_for('static', filename='js/map.js') }}"></script>
         <!-- leaflet stylesheet -->
         <link rel="stylesheet" 
               href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
@@ -51,31 +51,11 @@
         <div class="main-body">
             <div id="map-picture">
             </div>
-
-            <form class="treasure-place-rate">
-                <h1>
-                    Отзывы
-                </h1>
-                <h2>
-                    Местоположение
-                </h2>
-                <input type="text" name="adress">
-                <h2>
-                    Комментарий
-                </h2>
-                <textarea rows="5" cols="60" name="comment">
-                </textarea>
-                <h2>
-                    Оценка места по пятибальной шкале
-                </h2>
-                <select name="rating">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-            </form>
-        </div>
+            <div class="right-page">
+                <div id="weather-container">
+                </div>
+                <div id="menu-container">
+                </div>
+            </div>
     </body>
 </html>

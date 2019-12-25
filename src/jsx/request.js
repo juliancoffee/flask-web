@@ -6,6 +6,14 @@ const requestPost = (url, text, callback) => {
     httpRequest.send(text);
 }
 
+const requestGet = (url, callback) => {
+    let httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = callback;
+    httpRequest.open('GET', url);
+    httpRequest.setRequestHeader('Access-Control-Allow-Origin', '*')
+    httpRequest.send()
+}
+
 const onResponse = (response, callback) => {
     let target = response.originalTarget
     if (target.readyState === XMLHttpRequest.DONE) {
@@ -19,4 +27,4 @@ const onResponse = (response, callback) => {
     }
 }
 
-export { requestPost, onResponse }
+export { requestPost, requestGet, onResponse }

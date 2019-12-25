@@ -1,4 +1,5 @@
-import {requestPost} from "./request.js"
+import {requestPost, onResponse} from "./request.js"
+
 const div = () => document.createElement("div");
 const header = () => document.createElement("h2");
 const text = (textStr) => document.createTextNode(textStr);
@@ -16,18 +17,18 @@ const getCookie = (name) => {
         map((el) => el.
             split("=").
             map((el) => el.trim()))
-    let coq = ""
+    let result = ""
     for (let c of cookies) {
         if (c[0] === name) {
-            coq = c[1]
+            result = c[1]
         }
     }
 
-    return coq
+    return result
 }
 
 
-const newPost = (content, topic, user) => {
+const newPost = (content, topic) => {
     let posts = document.getElementById("treasure-news-placeholder");
     let newsDiv = div();
 
@@ -35,7 +36,7 @@ const newPost = (content, topic, user) => {
     contentDiv.setAttribute("class", "treasure-post-content")
     let newsHeader = header();
 
-    let textTopic = text(user + ": " + topic);
+    let textTopic = text(topic);
     let textContent = text(content);
 
     newsHeader.appendChild(textTopic);
@@ -47,4 +48,13 @@ const newPost = (content, topic, user) => {
     posts.insertBefore(newsDiv, posts.children[1]);
 }
 
-export {newPost, clearDiv, deleteDiv, getCookie}
+const createPost = (msg) => {
+    requestPost('/', msg, response => {
+        onResponse(response, (answer) => {
+            let {topic, content} = JSON.parse(answer);
+            newPost(content, topic)
+        })
+    })
+}
+
+export {createPost, newPost, clearDiv, deleteDiv, getCookie}

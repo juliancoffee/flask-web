@@ -49,10 +49,10 @@
             {% for post in posts %}
             <div>
                 <h2>
-                    {{ post.user +" : "+ post.topic }}
+                    {{ post.topic }}
                 </h2>
                 <div class="treasure-post-content">
-                    {{ post.content }}
+                    <pre>{{ post.content }}<pre>
                 </div>
             </div>
             {% endfor %}

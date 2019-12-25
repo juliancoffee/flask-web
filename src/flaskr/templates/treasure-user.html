@@ -23,9 +23,34 @@
             </a>
         </header>
         {% if logged == "Yes" %}
-            <h1>
-                You are logged
-            </h1>
+            {% if session == "Ok" %}
+            <div id="treasure-logged-form">
+                <h1>
+                    <p>
+                    Your name: {{ username }}
+                    <p>
+                </h1>
+                <img src="{{ url_for('static', filename='img/map-html.jpeg') }}"
+                alt="Choice" usemap="#choicemap">
+
+                <map name="choicemap">
+                    <area shape="rect" coords="0, 0, 200, 100" 
+                                        href="http://localhost:5000/quit">
+                    <area shape="rect" coords="0, 100, 200, 200"
+                                        href="http://localhost:5000/api/users">
+                    <area shape="rect" coords="0, 200, 200, 300"
+                                       href="http://localhost:5000/api/posts">
+                </map>
+            </div>
+            {% else %}
+            <div class="tresure-session-message">
+                <h3> Your session is expired </h3>
+                <a href="/treasure-user.html">
+                    <h3> Go to login </h3>
+                </a>
+            </div>
+            {% endif %}
+
         {% else %}
             <div id="treasure-enter">
                 <a href="treasure-login/login">

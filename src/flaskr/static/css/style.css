@@ -1,5 +1,7 @@
 body {
     background-image: url("../img/dog-corgi-select.jpeg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 header {
